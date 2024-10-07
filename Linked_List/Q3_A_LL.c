@@ -11,18 +11,17 @@ Purpose: Implementing the required functions for Question 3 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
-typedef struct _listnode
+typedef struct _listNode
 {
 	int item;
-	struct _listnode *next;
-} ListNode;			// You should not change the definition of ListNode
+	struct _listNode *next;
+} ListNode; // You should not change the definition of ListNode
 
-typedef struct _linkedlist
+typedef struct _linkedList
 {
 	int size;
 	ListNode *head;
-} LinkedList;			// You should not change the definition of LinkedList
-
+} LinkedList; // You should not change the definition of LinkedList
 
 //////////////////////// function prototypes /////////////////////////////////////
 
@@ -31,7 +30,7 @@ void moveOddItemsToBack(LinkedList *ll);
 
 void printList(LinkedList *ll);
 void removeAllItems(LinkedList *ll);
-ListNode * findNode(LinkedList *ll, int index);
+ListNode *findNode(LinkedList *ll, int index);
 int insertNode(LinkedList *ll, int index, int value);
 int removeNode(LinkedList *ll, int index);
 
@@ -42,10 +41,9 @@ int main()
 	LinkedList ll;
 	int c, i, j;
 	c = 1;
-	//Initialize the linked list 1 as an empty linked list
+	// Initialize the linked list 1 as an empty linked list
 	ll.head = NULL;
 	ll.size = 0;
-
 
 	printf("1: Insert an integer to the linked list:\n");
 	printf("2: Move all odd integers to the back of the linked list:\n");
@@ -83,15 +81,112 @@ int main()
 }
 
 //////////////////////////////////////////////////////////////////////////////////
+// void moveOddItemsToBack(LinkedList *ll)
+// {
+// 	if (ll->head == NULL || ll->head->next == NULL)
+// 		return;
+
+// 	ListNode *prev = NULL, *tail = NULL, *endTail = NULL, *cur = ll->head;
+
+// 	while (cur->next != NULL)
+// 	{
+// 		cur = cur->next;
+// 	}
+// 	tail = cur;
+// 	endTail = cur;
+// 	cur = ll->head;
+
+// 	while (cur != endTail)
+// 	{
+// 		if (cur->item % 2 == 1)
+// 		{
+// 			if (prev == NULL)
+// 				ll->head = cur->next;
+// 			else
+// 				prev->next = cur->next;
+
+// 			tail->next = cur;
+// 			tail = cur;
+// 			tail->next = NULL;
+// 			cur = (prev == NULL) ? ll->head : prev->next;
+// 		}
+// 		else
+// 		{
+// 			prev = cur;
+// 			cur = cur->next;
+// 		}
+// 	}
+
+// 	if (cur == endTail)
+// 	{
+
+// 		if (cur->item % 2 == 1)
+// 		{
+// 			if (prev == NULL)
+// 				ll->head = cur->next;
+// 			else
+// 				prev->next = cur->next;
+
+// 			tail->next = cur;
+// 			tail = cur;
+// 			tail->next = NULL;
+// 			cur = (prev == NULL) ? ll->head : prev->next;
+// 		}
+// 	}
+// }
+
+ListNode *moveOddNodeToEnd(LinkedList *ll, ListNode *prev, ListNode *cur, ListNode *tail)
+{
+	if (prev == NULL)
+		ll->head = cur->next;
+	else
+		prev->next = cur->next;
+
+	tail->next = cur;
+	cur->next = NULL;
+	return (prev == NULL) ? ll->head : prev->next;
+}
 
 void moveOddItemsToBack(LinkedList *ll)
 {
-	/* add your code here */
-}
+	if (ll->head == NULL || ll->head->next == NULL)
+		return;
 
+	ListNode *prev = NULL, *tail = NULL, *endTail = NULL, *cur = ll->head;
+
+	// 리스트의 끝 찾기
+	while (cur->next != NULL)
+	{
+		cur = cur->next;
+	}
+	tail = endTail = cur;
+	cur = ll->head;
+
+	// 마지막 노드 전까지 처리
+	while (cur != endTail)
+	{
+		if (cur->item % 2 == 1)
+		{
+			cur = moveOddNodeToEnd(ll, prev, cur, tail);
+			tail = tail->next;
+		}
+		else
+		{
+			prev = cur;
+			cur = cur->next;
+		}
+	}
+
+	// 마지막 노드 처리
+	if (cur == endTail && cur->item % 2 == 1)
+	{
+		moveOddNodeToEnd(ll, prev, cur, tail);
+	}
+}
 ///////////////////////////////////////////////////////////////////////////////////
 
-void printList(LinkedList *ll){
+void printList(LinkedList *ll)
+{
 
 	ListNode *cur;
 	if (ll == NULL)
@@ -108,13 +203,13 @@ void printList(LinkedList *ll){
 	printf("\n");
 }
 
-
 void removeAllItems(LinkedList *ll)
 {
 	ListNode *cur = ll->head;
 	ListNode *tmp;
 
-	while (cur != NULL){
+	while (cur != NULL)
+	{
 		tmp = cur->next;
 		free(cur);
 		cur = tmp;
@@ -123,8 +218,8 @@ void removeAllItems(LinkedList *ll)
 	ll->size = 0;
 }
 
-
-ListNode *findNode(LinkedList *ll, int index){
+ListNode *findNode(LinkedList *ll, int index)
+{
 
 	ListNode *temp;
 
@@ -136,7 +231,8 @@ ListNode *findNode(LinkedList *ll, int index){
 	if (temp == NULL || index < 0)
 		return NULL;
 
-	while (index > 0){
+	while (index > 0)
+	{
 		temp = temp->next;
 		if (temp == NULL)
 			return NULL;
@@ -146,7 +242,8 @@ ListNode *findNode(LinkedList *ll, int index){
 	return temp;
 }
 
-int insertNode(LinkedList *ll, int index, int value){
+int insertNode(LinkedList *ll, int index, int value)
+{
 
 	ListNode *pre, *cur;
 
@@ -154,7 +251,8 @@ int insertNode(LinkedList *ll, int index, int value){
 		return -1;
 
 	// If empty list or inserting first node, need to update head pointer
-	if (ll->head == NULL || index == 0){
+	if (ll->head == NULL || index == 0)
+	{
 		cur = ll->head;
 		ll->head = malloc(sizeof(ListNode));
 		ll->head->item = value;
@@ -163,10 +261,10 @@ int insertNode(LinkedList *ll, int index, int value){
 		return 0;
 	}
 
-
 	// Find the nodes before and at the target position
 	// Create a new node and reconnect the links
-	if ((pre = findNode(ll, index - 1)) != NULL){
+	if ((pre = findNode(ll, index - 1)) != NULL)
+	{
 		cur = pre->next;
 		pre->next = malloc(sizeof(ListNode));
 		pre->next->item = value;
@@ -178,8 +276,8 @@ int insertNode(LinkedList *ll, int index, int value){
 	return -1;
 }
 
-
-int removeNode(LinkedList *ll, int index){
+int removeNode(LinkedList *ll, int index)
+{
 
 	ListNode *pre, *cur;
 
@@ -188,7 +286,8 @@ int removeNode(LinkedList *ll, int index){
 		return -1;
 
 	// If removing first node, need to update head pointer
-	if (index == 0){
+	if (index == 0)
+	{
 		cur = ll->head->next;
 		free(ll->head);
 		ll->head = cur;
@@ -199,7 +298,8 @@ int removeNode(LinkedList *ll, int index){
 
 	// Find the nodes before and after the target position
 	// Free the target node and reconnect the links
-	if ((pre = findNode(ll, index - 1)) != NULL){
+	if ((pre = findNode(ll, index - 1)) != NULL)
+	{
 
 		if (pre->next == NULL)
 			return -1;
