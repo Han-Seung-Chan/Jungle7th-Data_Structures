@@ -11,18 +11,17 @@ Purpose: Implementing the required functions for Question 2 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
-typedef struct _listnode
+typedef struct _listㅜode
 {
 	int item;
-	struct _listnode *next;
-} ListNode;			// You should not change the definition of ListNode
+	struct _listㅜode *next;
+} ListNode; // You should not change the definition of ListNode
 
-typedef struct _linkedlist
+typedef struct _linkedList
 {
 	int size;
 	ListNode *head;
-} LinkedList;			// You should not change the definition of LinkedList
-
+} LinkedList; // You should not change the definition of LinkedList
 
 //////////////////////// function prototypes /////////////////////////////////////
 
@@ -35,7 +34,6 @@ ListNode *findNode(LinkedList *ll, int index);
 int insertNode(LinkedList *ll, int index, int value);
 int removeNode(LinkedList *ll, int index);
 
-
 //////////////////////////// main() //////////////////////////////////////////////
 
 int main()
@@ -43,11 +41,11 @@ int main()
 	LinkedList ll1, ll2;
 	int c, i, j;
 	c = 1;
-	//Initialize the linked list 1 as an empty linked list
+	// Initialize the linked list 1 as an empty linked list
 	ll1.head = NULL;
 	ll1.size = 0;
 
-	//Initialize the linked list 2 as an empty linked list
+	// Initialize the linked list 2 as an empty linked list
 	ll2.head = NULL;
 	ll2.size = 0;
 
@@ -78,7 +76,7 @@ int main()
 			printList(&ll2);
 			break;
 		case 3:
-		    printf("The resulting linked lists after merging the given linked list are:\n");
+			printf("The resulting linked lists after merging the given linked list are:\n");
 			alternateMergeLinkedList(&ll1, &ll2); // You need to code this function
 			printf("The resulting linked list 1: ");
 			printList(&ll1);
@@ -100,15 +98,62 @@ int main()
 }
 
 //////////////////////////////////////////////////////////////////////////////////
+void printLinkedList(LinkedList *list)
+{
+	if (list == NULL || list->head == NULL)
+	{
+		printf("빈 리스트\n");
+		return;
+	}
+
+	ListNode *cur = list->head;
+	while (cur != NULL)
+	{
+		printf("%d ", cur->item); // 여기서 'item'은 노드의 데이터를 저장하는 필드명입니다. 실제 구조체 정의에 따라 다를 수 있습니다.
+		cur = cur->next;
+	}
+	printf("\n");
+}
 
 void alternateMergeLinkedList(LinkedList *ll1, LinkedList *ll2)
 {
-    /* add your code here */
+	/*
+	구현 해야 하는것
+	예를 들어 두 개의 링크된 리스트가 LinkedList1과 LinkedList2라고 가정해 보겠습니다:
+	LinkedList1: 1, 2, 3
+	LinkedList2: 4, 5, 6, 7
+	결과 링크된 목록은 다음과 같습니다:
+	LinkedList1: 1, 4, 2, 5, 3, 6
+	LinkedList2: 7
+	*/
+	if (ll1->head == NULL || ll2->head == NULL)
+		return;
+
+	ListNode *cur1 = ll1->head;
+	ListNode *cur2 = ll2->head;
+	ListNode *next1, *next2;
+
+	while (cur1 != NULL && cur2 != NULL)
+	{
+		next1 = cur1->next;
+		next2 = cur2->next;
+
+		cur2->next = next1;
+		cur1->next = cur2;
+
+		cur1 = next1;
+		cur2 = next2;
+
+		ll1->size++;
+		ll2->size--;
+	}
+	ll2->head = cur2;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-void printList(LinkedList *ll){
+void printList(LinkedList *ll)
+{
 
 	ListNode *cur;
 	if (ll == NULL)
@@ -125,13 +170,13 @@ void printList(LinkedList *ll){
 	printf("\n");
 }
 
-
 void removeAllItems(LinkedList *ll)
 {
 	ListNode *cur = ll->head;
 	ListNode *tmp;
 
-	while (cur != NULL){
+	while (cur != NULL)
+	{
 		tmp = cur->next;
 		free(cur);
 		cur = tmp;
@@ -140,8 +185,8 @@ void removeAllItems(LinkedList *ll)
 	ll->size = 0;
 }
 
-
-ListNode *findNode(LinkedList *ll, int index){
+ListNode *findNode(LinkedList *ll, int index)
+{
 
 	ListNode *temp;
 
@@ -153,7 +198,8 @@ ListNode *findNode(LinkedList *ll, int index){
 	if (temp == NULL || index < 0)
 		return NULL;
 
-	while (index > 0){
+	while (index > 0)
+	{
 		temp = temp->next;
 		if (temp == NULL)
 			return NULL;
@@ -163,7 +209,8 @@ ListNode *findNode(LinkedList *ll, int index){
 	return temp;
 }
 
-int insertNode(LinkedList *ll, int index, int value){
+int insertNode(LinkedList *ll, int index, int value)
+{
 
 	ListNode *pre, *cur;
 
@@ -171,7 +218,8 @@ int insertNode(LinkedList *ll, int index, int value){
 		return -1;
 
 	// If empty list or inserting first node, need to update head pointer
-	if (ll->head == NULL || index == 0){
+	if (ll->head == NULL || index == 0)
+	{
 		cur = ll->head;
 		ll->head = malloc(sizeof(ListNode));
 		ll->head->item = value;
@@ -180,10 +228,10 @@ int insertNode(LinkedList *ll, int index, int value){
 		return 0;
 	}
 
-
 	// Find the nodes before and at the target position
 	// Create a new node and reconnect the links
-	if ((pre = findNode(ll, index - 1)) != NULL){
+	if ((pre = findNode(ll, index - 1)) != NULL)
+	{
 		cur = pre->next;
 		pre->next = malloc(sizeof(ListNode));
 		pre->next->item = value;
@@ -195,8 +243,8 @@ int insertNode(LinkedList *ll, int index, int value){
 	return -1;
 }
 
-
-int removeNode(LinkedList *ll, int index){
+int removeNode(LinkedList *ll, int index)
+{
 
 	ListNode *pre, *cur;
 
@@ -205,7 +253,8 @@ int removeNode(LinkedList *ll, int index){
 		return -1;
 
 	// If removing first node, need to update head pointer
-	if (index == 0){
+	if (index == 0)
+	{
 		cur = ll->head->next;
 		free(ll->head);
 		ll->head = cur;
@@ -216,7 +265,8 @@ int removeNode(LinkedList *ll, int index){
 
 	// Find the nodes before and after the target position
 	// Free the target node and reconnect the links
-	if ((pre = findNode(ll, index - 1)) != NULL){
+	if ((pre = findNode(ll, index - 1)) != NULL)
+	{
 
 		if (pre->next == NULL)
 			return -1;
