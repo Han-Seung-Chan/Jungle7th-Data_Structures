@@ -61,7 +61,7 @@ int main()
 	ll.head = NULL;
 	ll.size = 0;
 
-	// Initalize the stack as an empty stack
+	// Initalized the stack as an empty stack
 	s.ll.head = NULL;
 	s.ll.size = 0;
 
