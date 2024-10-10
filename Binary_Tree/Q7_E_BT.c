@@ -104,9 +104,9 @@ int smallestValue(BTNode *node)
 
     int leftItem = smallestValue(node->left);
     int rightItem = smallestValue(node->right);
-    int maxItem = leftItem > rightItem ? rightItem : leftItem;
+    int minItem = leftItem > rightItem ? rightItem : leftItem;
 
-    return maxItem == 0 ? node->item : node->item > maxItem ? maxItem
+    return minItem == 0 ? node->item : node->item > minItem ? minItem
                                                             : node->item;
 }
 
