@@ -11,21 +11,23 @@ Purpose: Implementing the required functions for Question 4 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
-typedef struct _bstnode{
+typedef struct _bstNode
+{
 	int item;
-	struct _bstnode *left;
-	struct _bstnode *right;
-} BSTNode;   // You should not change the definition of BSTNode
+	struct _bstNode *left;
+	struct _bstNode *right;
+} BSTNode; // You should not change the definition of BSTNode
 
-typedef struct _stackNode{
+typedef struct _stackNode
+{
 	BSTNode *data;
 	struct _stackNode *next;
-}StackNode; // You should not change the definition of StackNode
+} StackNode; // You should not change the definition of StackNode
 
 typedef struct _stack
 {
 	StackNode *top;
-}Stack; // You should not change the definition of Stack
+} Stack; // You should not change the definition of Stack
 
 ///////////////////////// function prototypes ////////////////////////////////////
 
@@ -48,14 +50,13 @@ int main()
 	int c, i;
 	c = 1;
 
-	//Initialize the Binary Search Tree as an empty Binary Search Tree
-	BSTNode * root;
+	// Initialize the Binary Search Tree as an empty Binary Search Tree
+	BSTNode *root;
 	root = NULL;
 
 	printf("1: Insert an integer into the binary search tree;\n");
 	printf("2: Print the post-order traversal of the binary search tree;\n");
 	printf("0: Quit;\n");
-
 
 	while (c != 0)
 	{
@@ -81,7 +82,6 @@ int main()
 			printf("Choice unknown;\n");
 			break;
 		}
-
 	}
 
 	return 0;
@@ -91,17 +91,64 @@ int main()
 
 void postOrderIterativeS1(BSTNode *root)
 {
-	 /* add your code here */
+	// 	현재 노드(current)를 루트로 설정하고, 마지막으로 방문한 노드(lastVisited)를 NULL로 초기화합니다.
+	// current가 NULL이 아니거나 스택이 비어있지 않은 동안 다음을 반복합니다:
+	// a. current가 NULL이 아니면:
+	// current를 스택에 푸시합니다.
+	// current를 왼쪽 자식으로 이동합니다.
+	// b. current가 NULL이면:
+	// 스택의 top에 있는 노드를 확인합니다(peek).
+	// 만약 이 노드에 오른쪽 자식이 있고, 그 오른쪽 자식이 마지막으로 방문한 노드가 아니라면:
+	// current를 오른쪽 자식으로 설정합니다.
+	// 그렇지 않다면 (왼쪽, 오른쪽 자식을 모두 방문했거나 자식이 없는 경우):
+	// 노드의 값을 출력합니다.
+	// 노드를 스택에서 팝하고 lastVisited로 설정합니다.
+	// 이 방법이 후위 순회를 올바르게 수행하는 이유는 다음과 같습니다:
+	// 왼쪽 서브트리를 전부 탐색한 후에야 오른쪽 서브트리로 이동합니다.
+	// 오른쪽 서브트리를 전부 탐색한 후에야 현재 노드를 출력합니다.
+	// lastVisited 변수를 사용하여 오른쪽 자식 노드의 처리 여부를 추적합니다.
+
+	if (root == NULL)
+		return;
+
+	Stack s = {NULL};
+	BSTNode *current = root;
+	BSTNode *lastVisited = NULL;
+
+	while (current != NULL || !isEmpty(&s))
+	{
+		if (current != NULL)
+		{
+			push(&s, current);
+			current = current->left;
+		}
+		else
+		{
+			BSTNode *peekNode = peek(&s);
+
+			if (peekNode->right != NULL && lastVisited != peekNode->right)
+			{
+				current = peekNode->right;
+			}
+			else
+			{
+				printf("%d ", peekNode->item);
+				lastVisited = pop(&s);
+			}
+		}
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void insertBSTNode(BSTNode **node, int value){
+void insertBSTNode(BSTNode **node, int value)
+{
 	if (*node == NULL)
 	{
 		*node = malloc(sizeof(BSTNode));
 
-		if (*node != NULL) {
+		if (*node != NULL)
+		{
 			(*node)->item = value;
 			(*node)->left = NULL;
 			(*node)->right = NULL;
@@ -113,7 +160,7 @@ void insertBSTNode(BSTNode **node, int value){
 		{
 			insertBSTNode(&((*node)->left), value);
 		}
-		else if (value >(*node)->item)
+		else if (value > (*node)->item)
 		{
 			insertBSTNode(&((*node)->right), value);
 		}
@@ -124,7 +171,7 @@ void insertBSTNode(BSTNode **node, int value){
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void push(Stack *stack, BSTNode * node)
+void push(Stack *stack, BSTNode *node)
 {
 	StackNode *temp;
 
@@ -146,11 +193,10 @@ void push(Stack *stack, BSTNode * node)
 	}
 }
 
-
-BSTNode * pop(Stack * s)
+BSTNode *pop(Stack *s)
 {
 	StackNode *temp, *t;
-	BSTNode * ptr;
+	BSTNode *ptr;
 	ptr = NULL;
 
 	t = s->top;
@@ -167,7 +213,7 @@ BSTNode * pop(Stack * s)
 	return ptr;
 }
 
-BSTNode * peek(Stack * s)
+BSTNode *peek(Stack *s)
 {
 	StackNode *temp;
 	temp = s->top;
@@ -184,7 +230,6 @@ int isEmpty(Stack *s)
 	else
 		return 0;
 }
-
 
 void removeAll(BSTNode **node)
 {
